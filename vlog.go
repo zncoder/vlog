@@ -115,11 +115,11 @@ func (v *Level) newError(s string) error {
 		return errors.New(s)
 
 	case v1:
-		_, fn, ln, ok := runtime.Caller(3)
+		_, fn, ln, ok := runtime.Caller(2)
 		if !ok {
 			return errors.New("???: " + s)
 		}
-		return errors.New("E[" + fn + ":" + strconv.Itoa(ln) + "]" + s)
+		return errors.New(fn + ":" + strconv.Itoa(ln) + " " + s)
 
 	case v2:
 		return errors.New(stackTrace(s))
