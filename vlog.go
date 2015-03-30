@@ -39,15 +39,15 @@ const (
 	v2 Level = -2 + iota
 	v1
 	info
-	warn
+	err
 )
 
-// W logs warning message.
+// E logs error message.
 // If args[0] is a format string, args is formatted with Printf,
 // otherwise args is formatted with Println.
-func (v *Level) W(args ...interface{}) {
-	if *v <= warn {
-		lg.Log(Format(args...))
+func (v *Level) E(args ...interface{}) {
+	if *v <= err {
+		lg.Log("E " + Format(args...))
 	}
 }
 
@@ -134,8 +134,8 @@ func parseLevel(lvs string) Level {
 		return v1
 	case "i", "info":
 		return info
-	case "w", "warn":
-		return warn
+	case "e", "err":
+		return err
 	default:
 		lg.Log(Format("ignore invalid logging level=%s", lvs))
 		return info

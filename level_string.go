@@ -4,9 +4,9 @@ package vlog
 
 import "fmt"
 
-const _Level_name = "v2v1infowarn"
+const _Level_name = "v2v1infoerr"
 
-var _Level_index = [...]uint8{2, 4, 8, 12}
+var _Level_index = [...]uint8{2, 4, 8, 11}
 
 func (i Level) String() string {
 	i -= -2

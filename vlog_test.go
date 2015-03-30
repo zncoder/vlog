@@ -15,20 +15,20 @@ func TestParseFlag(t *testing.T) {
 		prefix map[string]Level
 	}{
 		{
-			"*=w,foo=i,bar/*=v1,foo/bar/*=v2",
+			"*=e,foo=i,bar/*=v1,foo/bar/*=v2",
 			map[string]Level{
 				"foo": info,
 			},
 			map[string]Level{
-				"/":        warn,
+				"/":        err,
 				"bar/":     v1,
 				"foo/bar/": v2,
 			},
 		},
 		{
-			"fw=w,fi=i,fv1=v1,fv2=v2",
+			"fe=e,fi=i,fv1=v1,fv2=v2",
 			map[string]Level{
-				"fw":  warn,
+				"fe":  err,
 				"fi":  info,
 				"fv1": v1,
 				"fv2": v2,
@@ -109,16 +109,16 @@ func TestSetLevels(t *testing.T) {
 		print string
 	}{
 		{
-			"*=w,a=i,a/b=v1,c/d/e=i",
+			"*=e,a=i,a/b=v1,c/d/e=i",
 			[]*levelVar{
-				&levelVar{Level: warn},
+				&levelVar{Level: err},
 				&levelVar{Name: "a", Level: info},
 				&levelVar{Name: "a/b", Level: v1},
-				&levelVar{Name: "a/b/c", Level: warn},
-				&levelVar{Name: "b/c", Level: warn},
-				&levelVar{Name: "c/d", Level: warn},
+				&levelVar{Name: "a/b/c", Level: err},
+				&levelVar{Name: "b/c", Level: err},
+				&levelVar{Name: "c/d", Level: err},
 			},
-			"*=warn,a=info,a/b=v1,a/b/c=warn,b/c=warn,c/d=warn",
+			"*=err,a=info,a/b=v1,a/b/c=err,b/c=err,c/d=err",
 		},
 		{
 			"a=i,a/b=v1,a/b/c=v2",
@@ -176,7 +176,7 @@ func TestLog(t *testing.T) {
 	vabc := newVar("a/b/c", "")
 	vabd := newVar("a/b/d", "")
 	vc := newVar("c", "")
-	setLevels("*=w,a=i,a/b/*=v1,a/b/c=v2")
+	setLevels("*=e,a=i,a/b/*=v1,a/b/c=v2")
 	if *va != info {
 		t.Errorf("va got %v, want info", va)
 	}
@@ -189,12 +189,12 @@ func TestLog(t *testing.T) {
 	if *vabd != v1 {
 		t.Errorf("vabd got %v, want v1", vabd)
 	}
-	if *vc != warn {
-		t.Errorf("vc got %v, want warn", vc)
+	if *vc != err {
+		t.Errorf("vc got %v, want err", vc)
 	}
 
 	type fn func(*Level, ...interface{})
-	fnW := (*Level).W
+	fnE := (*Level).E
 	fnI := (*Level).I
 	fnV1 := (*Level).V1
 	fnV2 := (*Level).V2
@@ -205,7 +205,7 @@ func TestLog(t *testing.T) {
 		m  string
 		c  bool
 	}{
-		{va, fnW, "vaW", true},
+		{va, fnE, "vaE", true},
 		{va, fnI, "vaI", true},
 		{va, fnV1, "vaV1", false},
 		{vab, fnI, "vabI", true},
@@ -216,7 +216,7 @@ func TestLog(t *testing.T) {
 		{vabd, fnI, "vabdI", true},
 		{vabd, fnV1, "vabdV1", true},
 		{vabd, fnV2, "vabdV2", false},
-		{vc, fnW, "vcW", true},
+		{vc, fnE, "vcE", true},
 		{vc, fnI, "vcI", false},
 		{vc, fnV1, "vcV1", false},
 	}

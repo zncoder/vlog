@@ -19,6 +19,9 @@ func Format(args ...interface{}) string {
 		return ""
 	}
 	sfmt, ok := args[0].(string)
+	if ok && len(args) == 1 {
+		return sfmt
+	}
 	if !ok || strings.Index(sfmt, "%") == -1 {
 		s := fmt.Sprintln(args...)
 		return s[:len(s)-1] // trim ending newline
