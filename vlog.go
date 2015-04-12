@@ -51,11 +51,19 @@ func (v *Level) E(args ...interface{}) {
 	}
 }
 
+func E(args ...interface{}) {
+	levelVars[0].Level.E(args...)
+}
+
 // I logs info message.
 func (v *Level) I(args ...interface{}) {
 	if *v <= info {
 		lg.Log(Format(args...))
 	}
+}
+
+func I(args ...interface{}) {
+	levelVars[0].Level.I(args...)
 }
 
 // V1 logs verbose level 1 message.
@@ -65,11 +73,19 @@ func (v *Level) V1(args ...interface{}) {
 	}
 }
 
+func V1(args ...interface{}) {
+	levelVars[0].Level.V1(args...)
+}
+
 // V2 logs verbose level 2 message.
 func (v *Level) V2(args ...interface{}) {
 	if *v <= v2 {
 		lg.Log(Format(args...))
 	}
+}
+
+func V2(args ...interface{}) {
+	levelVars[0].Level.V2(args...)
 }
 
 // Vstack logs the message and the stacktrace of this goroutine.
@@ -82,10 +98,18 @@ func (v *Level) Vstack(args ...interface{}) {
 	lg.Log(stackTrace(s))
 }
 
+func Vstack(args ...interface{}) {
+	levelVars[0].Level.Vstack(args...)
+}
+
 // On returns true if the specific verbose level 1-3 is enabled.
 func (v *Level) On(l int) bool {
 	lv := Level(-l)
 	return *v <= lv
+}
+
+func On(l int) bool {
+	return levelVars[0].Level.On(l)
 }
 
 // Vset sets the verbose logging level.
@@ -100,12 +124,20 @@ func (v *Level) Vset(l int) Level {
 	return old
 }
 
+func Vset(l int) Level {
+	return levelVars[0].Level.Vset(l)
+}
+
 // Error returns an error. The message of the error is formatted
 // from args. If verbose level 1 is enabled, the error messag includes
 // the caller, and if verbose level 2 is enabled, the error message
 // includes the call stack.
 func (v *Level) Error(args ...interface{}) error {
 	return v.newError(Format(args...))
+}
+
+func Error(args ...interface{}) error {
+	return levelVars[0].Level.Error(args...)
 }
 
 // newError is necessary to get the correct call stack
@@ -231,6 +263,7 @@ func ParseEnv() {
 	}
 }
 
+// TODO: set level from a string at runtime
 func setLevels(value string) {
 	exact, prefix := parseFlag(value)
 	if v, ok := prefix["/"]; ok {
