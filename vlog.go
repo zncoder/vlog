@@ -52,7 +52,9 @@ func (v *Level) E(args ...interface{}) {
 }
 
 func E(args ...interface{}) {
-	levelVars[0].Level.E(args...)
+	if levelVars[0].Level <= err {
+		lg.Log("E " + Format(args...))
+	}
 }
 
 // I logs info message.
@@ -63,7 +65,9 @@ func (v *Level) I(args ...interface{}) {
 }
 
 func I(args ...interface{}) {
-	levelVars[0].Level.I(args...)
+	if levelVars[0].Level <= info {
+		lg.Log(Format(args...))
+	}
 }
 
 // V1 logs verbose level 1 message.
@@ -74,7 +78,9 @@ func (v *Level) V1(args ...interface{}) {
 }
 
 func V1(args ...interface{}) {
-	levelVars[0].Level.V1(args...)
+	if levelVars[0].Level <= v1 {
+		lg.Log(Format(args...))
+	}
 }
 
 // V2 logs verbose level 2 message.
@@ -85,7 +91,9 @@ func (v *Level) V2(args ...interface{}) {
 }
 
 func V2(args ...interface{}) {
-	levelVars[0].Level.V2(args...)
+	if levelVars[0].Level <= v2 {
+		lg.Log(Format(args...))
+	}
 }
 
 // Vstack logs the message and the stacktrace of this goroutine.
